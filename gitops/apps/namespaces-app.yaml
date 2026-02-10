@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/mtk14m/nautilius.git
     targetRevision: main                                     
-    path: gitops/base
+    path: gitops/base/namespaces
 
   destination:
     server: https://kubernetes.default.svc
