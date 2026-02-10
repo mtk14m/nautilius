@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform
+  labels:
+    name: platform
+    managed-by: argocd
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    name: monitoring
+    managed-by: argocd
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-services
+  labels:
+    name: platform-services
+    managed-by: argocd

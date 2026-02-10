@@ -1,0 +1,13 @@
+---
+- name: Bootstrap VPS OVH - créer user platform
+  hosts: k3s_master
+  become: true
+  become_user: root
+  gather_facts: false
+
+  vars:
+    platform_user: platform
+    platform_ssh_pubkey: "{{ lookup('file', lookup('env','HOME') + '/.ssh/platform-ssh-key.pub') }}"
+
+  roles:
+    - bootstrap_user

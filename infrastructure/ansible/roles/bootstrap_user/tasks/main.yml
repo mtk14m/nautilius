@@ -1,0 +1,56 @@
+---
+- name: Créer le user platform
+  ansible.builtin.user:
+    name: "{{ platform_user }}"
+    shell: /bin/bash
+    groups: sudo
+    append: true
+    create_home: true
+
+- name: Autoriser platform à faire sudo sans mot de passe
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/platform
+    content: "platform ALL=(ALL) NOPASSWD:ALL\n"
+    owner: root
+    group: root
+    mode: "0440"
+
+- name: Créer le dossier .ssh
+  ansible.builtin.file:
+    path: "/home/{{ platform_user }}/.ssh"
+    state: directory
+    owner: "{{ platform_user }}"
+    group: "{{ platform_user }}"
+    mode: "0700"
+
+- name: Ajouter la clé publique dans authorized_keys
+  ansible.builtin.authorized_key:
+    user: "{{ platform_user }}"
+    state: present
+    key: "{{ platform_ssh_pubkey }}"
+    path: "/home/{{ platform_user }}/.ssh/authorized_keys"
+    manage_dir: false
+
+
+
+- name: S'assurer que python3 est installé
+  ansible.builtin.package:
+    name: python3
+    state: present
+  become: true
+
+# Durcissement SSH : désactiver le login root par mot de passe
+- name: Limiter le login root SSH (PermitRootLogin)
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin prohibit-password'
+    state: present
+    backup: yes
+
+- name: Redémarrer sshd si modifié
+  ansible.builtin.service:
+    name: ssh
+    state: restarted
+  when: ansible_facts.services is not defined or true  # simple, on redémarre
+  ignore_errors: true
