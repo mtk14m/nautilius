@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - argocd.mtk14m.com
+        - argocd.ntl.mtk14m.com
       secretName: argocd-tls
   rules:
-    - host: argocd.mtk14m.com
+    - host: argocd.ntl.mtk14m.com
       http:
         paths:
           - path: /
