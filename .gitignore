@@ -1,0 +1,76 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets and sensitive data
+*.key
+*.pem
+*.crt
+secrets/
+.env
+.env.local
+*.secret
+
+# Dependencies
+vendor/
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.so
+*.exe
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Kubernetes
+kubeconfig
+kubeconfig.local
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Helm
+*.tgz
+
+# Go
+*.test
+*.out
+
+# Python
+venv/
+env/
+ENV/
+.venv
+
+# Database
+*.db
+*.sqlite
+
+docs
+
