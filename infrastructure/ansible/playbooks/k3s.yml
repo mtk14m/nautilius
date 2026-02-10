@@ -1,0 +1,8 @@
+---
+- name: Installer k3s sur le VPS
+  hosts: k3s_master
+  become: true
+  gather_facts: true
+
+  roles:
+    - k3s_node
