@@ -73,4 +73,5 @@ ENV/
 *.sqlite
 
 docs
+notes
 
