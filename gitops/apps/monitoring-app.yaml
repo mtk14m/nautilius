@@ -19,6 +19,10 @@ spec:
         fullnameOverride: monitoring
         namespaceOverride: monitoring
 
+        # On désactive les webhooks d'admission (évite le problème du secret manquant)
+        admissionWebhooks:
+          enabled: false
+
         grafana:
           enabled: true
           service:
