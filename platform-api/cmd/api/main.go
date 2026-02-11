@@ -62,7 +62,7 @@ func main() {
 	logger.Info("Server started", zap.String("port", port))
 
 	//Wait for interrupt signal
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
