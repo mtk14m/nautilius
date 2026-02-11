@@ -15,6 +15,9 @@ spec:
     helm:
       releaseName: loki
       values: |
+        # Mode de déploiement : SingleBinary pour homelab
+        deploymentMode: SingleBinary
+
         loki:
           auth_enabled: false
           commonConfig:
