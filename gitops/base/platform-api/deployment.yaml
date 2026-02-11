@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: mtk14m/notilius-platform-api:latest
+          image: ghcr.io/mtk14m/notilius-platform-api:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -36,3 +36,4 @@ spec:
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
+
