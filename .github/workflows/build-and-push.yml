@@ -13,7 +13,7 @@ jobs:
   build-and-push:
     # runner linux
     runs-on: ubuntu-latest
-
+    #permissions pour le jobs
     permissions:
       contents: read
       packages: write
