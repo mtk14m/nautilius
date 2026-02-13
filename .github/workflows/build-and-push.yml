@@ -6,7 +6,7 @@ on:
       - main
     
 permissions: 
-  contentes: read
+  contents: read
   packages: write
 
 jobs:
@@ -18,29 +18,31 @@ jobs:
     #on met de code sur la machine 
     - name: Checkout code 
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     #Build avec buildx de docker
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-actions@v3
+      uses: docker/setup-buildx-action@v3
 
     #Login à github container registry
     - name: Login to Github Container Registry 
       uses: docker/login-action@v3
       with:
-        registryy: ghrc.io
-        username: ${{github.actor}}
-        password: ${{ secret.GITHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Generate version from commit SHA
-        id: version
-        run: |
-          # Récupère les 7 premiers caractères du SHA (court et lisible)
-          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
-          # Crée la version : 0.1.0-abc1234
-          VERSION="0.1.0-${SHORT_SHA}"
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
-          echo "Built version: ${VERSION}"
+      id: version
+      run: |
+        # Récupère les 7 premiers caractères du SHA (court et lisible)
+        SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+        # Crée la version : 0.1.0-abc1234
+        VERSION="0.1.0-${SHORT_SHA}"
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+        echo "Built version: ${VERSION}"
       
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
