@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package provisioning.v1;
+
+// Option Go
+option go_package = "github.com/mtk14m/notilius/proto/provisioning/v1;provisioning";
+
+// ===== SERVICES (RPC endpoints) =====
+service ProvisioningService {
+  // Create a new Kubernetes namespace with all required resources
+  rpc CreateNamespace(CreateNamespaceRequest) 
+    returns (CreateNamespaceResponse);
+  
+  // Delete a namespace
+  rpc DeleteNamespace(DeleteNamespaceRequest)
+    returns (DeleteNamespaceResponse);
+  
+  // Get namespace status
+  rpc GetNamespaceStatus(GetNamespaceStatusRequest)
+    returns (GetNamespaceStatusResponse);
+  
+  // List namespaces for a user
+  rpc ListNamespaces(ListNamespacesRequest)
+    returns (ListNamespacesResponse);
+}
+
+// ===== REQUEST/RESPONSE Messages =====
+
+message CreateNamespaceRequest {
+  // Namespace name (must follow Kubernetes naming rules)
+  string namespace = 1;
+  
+  // Labels for the namespace
+  map<string, string> labels = 2;
+  
+  // Owner/user info
+  string owner_id = 3;
+  string owner_email = 4;
+  
+  // Optional: quotas
+  ResourceQuota quota = 5;
+}
+
+message CreateNamespaceResponse {
+  bool success = 1;
+  string message = 2;
+  string namespace = 3;
+  
+  // Kubernetes ResourceVersion for optimistic locking
+  string resource_version = 4;
+  
+  // Metadata
+  NamespaceMetadata metadata = 5;
+}
+
+message DeleteNamespaceRequest {
+  string namespace = 1;
+  string owner_id = 2;
+  
+  // Grace period for pod termination (seconds)
+  int32 grace_period_seconds = 3;
+}
+
+message DeleteNamespaceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetNamespaceStatusRequest {
+  string namespace = 1;
+}
+
+message GetNamespaceStatusResponse {
+  string namespace = 1;
+  string phase = 2;  // Active, Terminating
+  
+  // Pod metrics
+  int32 pod_count = 3;
+  int32 running_pods = 4;
+  int32 failed_pods = 5;
+  
+  // Resource usage
+  ResourceUsage resource_usage = 6;
+  
+  // Timestamps
+  int64 created_at_unix = 7;
+  int64 updated_at_unix = 8;
+}
+
+message ListNamespacesRequest {
+  string owner_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message ListNamespacesResponse {
+  repeated NamespaceInfo namespaces = 1;
+  int32 total = 2;
+}
+
+// ===== DATA MODELS =====
+
+message NamespaceMetadata {
+  string uid = 1;  // Kubernetes UID
+  string name = 2;
+  map<string, string> labels = 3;
+  map<string, string> annotations = 4;
+  int64 created_timestamp = 5;
+}
+
+message ResourceQuota {
+  // CPU in millicores
+  int32 cpu_limit = 1;
+  // Memory in MB
+  int32 memory_limit = 2;
+  // Pod count
+  int32 pod_limit = 3;
+}
+
+message ResourceUsage {
+  int32 cpu_millis = 1;
+  int32 memory_mb = 2;
+}
+
+// ===== ERROR Messages (for gRPC status details) =====
+
+message ErrorDetail {
+  string code = 1;  // NAMESPACE_ALREADY_EXISTS, INVALID_NAME, etc
+  string message = 2;
+}
