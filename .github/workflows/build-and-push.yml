@@ -14,6 +14,10 @@ jobs:
     # runner linux
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
     #on met de code sur la machine 
     - name: Checkout code 
