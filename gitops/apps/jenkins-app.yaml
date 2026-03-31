@@ -1,0 +1,70 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jenkins
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://charts.jenkins.io
+    chart: jenkins
+    targetRevision: 5.5.1
+    helm:
+      releaseName: jenkins
+      values: |
+        fullnameOverride: jenkins
+        namespaceOverride: jenkins
+
+        controller:
+          adminUser: admin
+          adminPasswordSecretName: jenkins-admin-secret
+          serviceType: ClusterIP
+          servicePort: 8080
+          agentListenerPort: 50000
+          ingress:
+            enabled: true
+            ingressClassName: traefik
+            annotations:
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+            hosts:
+              - jenkins.ntl.mtk14m.com  # Remplacez par votre domaine
+            tls:
+              - hosts:
+                  - jenkins.ntl.mtk14m.com
+                secretName: jenkins-tls
+          persistence:
+            enabled: true
+            existingClaim: jenkins-pvc  # Utilise le PVC créé ci-dessus
+            size: 10Gi
+          resources:
+            requests:
+              cpu: 256m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          javaOpts: "-Djenkins.install.runSetupWizard=false"  # Désactive le wizard d'installation
+
+        agent:
+          enabled: true
+          resources:
+            requests:
+              cpu: 256m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jenkins
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

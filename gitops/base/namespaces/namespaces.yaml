@@ -23,3 +23,12 @@ metadata:
   labels:
     name: platform-services
     managed-by: argocd
+
+---
+apiVersion: V1
+kind: Namespace
+metadata:
+  name: jenkins
+  labels:
+    name: jenkins
+    managed-by: argocd
