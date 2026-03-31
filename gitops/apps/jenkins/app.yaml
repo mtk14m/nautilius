@@ -9,55 +9,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://charts.jenkins.io
-    chart: jenkins
-    targetRevision: 5.5.1
-    helm:
-      releaseName: jenkins
-      values: |
-        fullnameOverride: jenkins
-        namespaceOverride: jenkins
-
-        controller:
-          admin:
-            username: admin
-            passwordSecretName: jenkins-admin-secret
-          serviceType: ClusterIP
-          servicePort: 8080
-          agentListenerPort: 50000
-          ingress:
-            enabled: true
-            ingressClassName: traefik
-            annotations:
-              cert-manager.io/cluster-issuer: "letsencrypt-prod"
-            hosts:
-              - jenkins.ntl.mtk14m.com  
-            tls:
-              - hosts:
-                  - jenkins.ntl.mtk14m.com
-                secretName: jenkins-tls
-          persistence:
-            enabled: true
-            existingClaim: jenkins-pvc
-            size: 10Gi
-          resources:
-            requests:
-              cpu: 256m
-              memory: 512Mi
-            limits:
-              cpu: 1000m
-              memory: 2Gi
-          javaOpts: "-Djenkins.install.runSetupWizard=false"  # Désactive le wizard d'installation
-
-        agent:
-          enabled: true
-          resources:
-            requests:
-              cpu: 256m
-              memory: 512Mi
-            limits:
-              cpu: 1000m
-              memory: 2Gi
+    repoURL: https://github.com/mtk14m/nautilius.git
+    targetRevision: main
+    path: gitops/base/jenkins
 
   destination:
     server: https://kubernetes.default.svc
