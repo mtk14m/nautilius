@@ -30,14 +30,14 @@ spec:
             annotations:
               cert-manager.io/cluster-issuer: "letsencrypt-prod"
             hosts:
-              - jenkins.ntl.mtk14m.com  # Remplacez par votre domaine
+              - jenkins.ntl.mtk14m.com  
             tls:
               - hosts:
                   - jenkins.ntl.mtk14m.com
                 secretName: jenkins-tls
           persistence:
             enabled: true
-            existingClaim: jenkins-pvc  # Utilise le PVC créé ci-dessus
+            existingClaim: jenkins-pvc
             size: 10Gi
           resources:
             requests:
