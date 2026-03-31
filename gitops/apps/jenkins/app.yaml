@@ -19,8 +19,9 @@ spec:
         namespaceOverride: jenkins
 
         controller:
-          username: admin
-          passwordSecretName: jenkins-admin-secret
+          admin:
+            username: admin
+            passwordSecretName: jenkins-admin-secret
           serviceType: ClusterIP
           servicePort: 8080
           agentListenerPort: 50000
